@@ -300,8 +300,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b925c00adde15458f61786a65bd2c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlbruntimeLoader
-  fileName: Fox.glb
+  fileName: dog_quad15k.glb
   targetHeight: 0.5
+  normalStrength: 0.5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

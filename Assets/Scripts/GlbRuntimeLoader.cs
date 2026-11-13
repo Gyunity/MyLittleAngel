@@ -5,10 +5,13 @@ using UnityEngine.InputSystem;
 
 public class GlbRuntimeLoader : MonoBehaviour
 {
-    [SerializeField] private string fileName = "Fox.glb";
+    [SerializeField] private string fileName = "SampleDog.glb";
     [SerializeField] private float targetHeight = 0.5f;
-
+    [SerializeField, Range(0f, 1f)] private float normalStrength = 0.3f;
+    private float appliedNormalStrength = -1f;
     private Animation anim;
+    private string firstClip;
+    private bool isLoaded;
     async void Start()
     {
         string path = Path.Combine(Application.persistentDataPath, fileName);
@@ -51,7 +54,7 @@ public class GlbRuntimeLoader : MonoBehaviour
         }
 
         FitToHeight(targetHeight);
-
+        isLoaded = true;
 
         anim = GetComponentInChildren<Animation>();
         if (anim == null)
@@ -62,15 +65,19 @@ public class GlbRuntimeLoader : MonoBehaviour
         foreach (AnimationState state in anim)
         {
             Debug.Log($"[GlbLoader] 클립 : {state.name}");
+            state.wrapMode = WrapMode.Loop;
+            firstClip ??= state.name;
         }
+        if (firstClip != null) anim.Play(firstClip);
     }
     private void Update()
     {
+        if (isLoaded && !Mathf.Approximately(normalStrength, appliedNormalStrength))
+            ApplyNormalStrength(normalStrength);
         if (anim == null || Keyboard.current == null) return;
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame) PlayClip("Survey");
-        if (Keyboard.current.digit2Key.wasPressedThisFrame) PlayClip("Walk");
-        if (Keyboard.current.digit3Key.wasPressedThisFrame) PlayClip("Run");
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && firstClip != null)
+            PlayClip(firstClip);
     }
 
     private void PlayClip(string clipName)
@@ -97,6 +104,20 @@ public class GlbRuntimeLoader : MonoBehaviour
         bounds = GetBounds(renderers);
         Vector3 offset = transform.position - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
         transform.position += offset;
+    }
+    private void ApplyNormalStrength(float strength)
+    {
+        int count = 0;
+        foreach (var r in GetComponentsInChildren<Renderer>())
+        {
+            foreach (var m in r.materials)
+            {
+                if (m.HasProperty("normalTexture_scale")) { m.SetFloat("normalTexture_scale", strength); count++; }
+                if (m.HasProperty("_BumpScale")) { m.SetFloat("_BumpScale", strength); count++; }
+            }
+        }
+        appliedNormalStrength = strength;
+        Debug.Log($"[GlbLoader] 노멀 세기 {strength} 적용, 재질 {count}개");
     }
     private Bounds GetBounds(Renderer[] renderers)
     {
