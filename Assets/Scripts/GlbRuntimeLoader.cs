@@ -12,6 +12,8 @@ public class GlbRuntimeLoader : MonoBehaviour
     private Animation anim;
     private string firstClip;
     private bool isLoaded;
+    public event System.Action Loaded;
+    public bool IsLoaded => isLoaded;
     async void Start()
     {
         string path = Path.Combine(Application.persistentDataPath, fileName);
@@ -55,6 +57,7 @@ public class GlbRuntimeLoader : MonoBehaviour
 
         FitToHeight(targetHeight);
         isLoaded = true;
+        Loaded?.Invoke();
 
         anim = GetComponentInChildren<Animation>();
         if (anim == null)
@@ -79,7 +82,10 @@ public class GlbRuntimeLoader : MonoBehaviour
         if (Keyboard.current.digit1Key.wasPressedThisFrame && firstClip != null)
             PlayClip(firstClip);
     }
-
+    private void OnEnable()
+    {
+        if (anim != null && firstClip != null) anim.Play(firstClip);
+    }
     private void PlayClip(string clipName)
     {
         if (anim.GetClip(clipName) == null)
