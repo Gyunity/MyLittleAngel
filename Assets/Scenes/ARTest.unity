@@ -245,6 +245,13 @@ MonoBehaviour:
   dog: {fileID: 1671765435}
   yawOffset: 0
   planeManager: {fileID: 1988816980}
+  moveSpeed: 0.3
+  turnSpeed: 360
+  arriveDistance: 0.02
+  slowDownDistance: 0.15
+  minSpeedFactor: 0.3
+  planeFillColor: {r: 0.72, g: 0.88, b: 0.93, a: 0.18}
+  planeLineColor: {r: 1, g: 1, b: 1, a: 0.35}
 --- !u!4 &743529920
 Transform:
   m_ObjectHideFlags: 0
@@ -274,6 +281,8 @@ GameObject:
   - component: {fileID: 762824687}
   - component: {fileID: 762824686}
   - component: {fileID: 762824685}
+  - component: {fileID: 762824691}
+  - component: {fileID: 762824690}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -494,6 +503,63 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &762824690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762824683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d275dceb98f5b44b4e90d32f77ab77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraConfigLogger
+  cameraManager: {fileID: 0}
+--- !u!114 &762824691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762824683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &854551398
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,6 +734,14 @@ MonoBehaviour:
   fileName: dog_quad15k_transfer.glb
   targetHeight: 0.5
   normalStrength: 0.3
+  walkClipName: 
+  idleClipName: 
+  crossFadeTime: 0.2
+  stopFadeTime: 0.4
+  idleBreathAngle: 1.5
+  idleHeadYawAngle: 8
+  idleHeadPitchAngle: 3
+  idleTailWagAngle: 6
 --- !u!1 &1887360194
 GameObject:
   m_ObjectHideFlags: 0
