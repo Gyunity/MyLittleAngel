@@ -95,7 +95,10 @@ public class TapToPlace : MonoBehaviour
         if (!dog.IsLoaded) return;
         var pointer = Pointer.current;
         if (pointer == null || !pointer.press.wasPressedThisFrame) return;
-        if (!raycastManager.Raycast(pointer.position.ReadValue(), hits, TrackableType.PlaneWithinPolygon)) return;
+        var screenPos = pointer.position.ReadValue();
+        // 그림자 조절 패널을 누른 건 바닥 터치로 처리하지 않음
+        if (DogGroundShadow.IsPointerOverTuningPanel(screenPos)) return;
+        if (!raycastManager.Raycast(screenPos, hits, TrackableType.PlaneWithinPolygon)) return;
 
         var pose = hits[0].pose;
         if (placed)
@@ -120,11 +123,9 @@ public class TapToPlace : MonoBehaviour
         if ((point - dogRoot.position).sqrMagnitude <= arriveDistance * arriveDistance) return;
 
         target = point;
-        if (!moving)
-        {
-            moving = true;
-            dog.PlayWalk();
-        }
+        moving = true;
+        // 이동 중에 새로 터치해도 걷기 애니메이션이 확실히 재생되도록 매번 호출
+        dog.PlayWalk();
     }
 
     private void MoveTowardsTarget()

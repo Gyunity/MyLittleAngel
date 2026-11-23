@@ -36,6 +36,8 @@ public class GlbRuntimeLoader : MonoBehaviour
     private bool isLoaded;
     public event System.Action Loaded;
     public bool IsLoaded => isLoaded;
+    // 크기 맞춘 직후 모델 바운즈 (이 Transform 로컬 좌표). 오브젝트가 꺼져 있어도 쓸 수 있도록 저장
+    public Bounds LocalBounds { get; private set; }
     async void Start()
     {
         string path = Path.Combine(Application.persistentDataPath, fileName);
@@ -247,7 +249,9 @@ public class GlbRuntimeLoader : MonoBehaviour
     {
         if (anim == null || walkClip == null) return;
         anim[walkClip].speed = 1f;
-        if (!anim.IsPlaying(walkClip)) anim.CrossFade(walkClip, crossFadeTime);
+        // IsPlaying은 idle로 넘어가며 사라지는 중인 걷기도 true라서 조건 없이 항상 CrossFade.
+        // 이미 걷는 중이면 처음부터 다시 재생하지 않고 그대로 이어감
+        anim.CrossFade(walkClip, crossFadeTime);
     }
 
     // 이동 속도에 맞춰 걷기 애니메이션 재생 속도를 조절 (감속할 때 발 미끄러짐 방지)
@@ -307,6 +311,11 @@ public class GlbRuntimeLoader : MonoBehaviour
         bounds = GetBounds(renderers);
         Vector3 offset = transform.position - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
         transform.position += offset;
+
+        bounds = GetBounds(renderers);
+        var localSize = transform.InverseTransformVector(bounds.size);
+        LocalBounds = new Bounds(transform.InverseTransformPoint(bounds.center),
+            new Vector3(Mathf.Abs(localSize.x), Mathf.Abs(localSize.y), Mathf.Abs(localSize.z)));
     }
     private void ApplyNormalStrength(float strength)
     {

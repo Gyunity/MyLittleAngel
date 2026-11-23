@@ -516,6 +516,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraConfigLogger
   cameraManager: {fileID: 0}
+  preferredWidth: 1280
+  preferredHeight: 720
 --- !u!114 &762824691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,6 +753,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1887360195}
+  - component: {fileID: 1887360196}
   m_Layer: 0
   m_Name: DogRoot
   m_TagString: Untagged
@@ -774,6 +777,34 @@ Transform:
   - {fileID: 1671765434}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887360196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887360194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151f31668320c264aae53a0aa8fb2ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DogGroundShadow
+  dog: {fileID: 0}
+  groundRoot: {fileID: 0}
+  blobShader: {fileID: 4800000, guid: a8ede7895af0c214b8c6413c00ba673b, type: 3}
+  shadowColor: {r: 0, g: 0, b: 0, a: 1}
+  heightAboveGround: 0.001
+  bodyOpacity: 0.35
+  bodyHardness: 0.1
+  bodySizeScale: {x: 1.1, y: 0.9}
+  footBoneNames: []
+  footOpacity: 0.55
+  footHardness: 0.25
+  footSizeRatio: 0.14
+  footTipScale: 1
+  footFadeHeightRatio: 0.06
+  footLiftedScale: 1.5
+  logBones: 0
 --- !u!1 &1988816977
 GameObject:
   m_ObjectHideFlags: 0
