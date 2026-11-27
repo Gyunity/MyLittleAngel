@@ -78,7 +78,11 @@ public class DogGroundShadow : MonoBehaviour
     {
         if (dog == null) dog = GetComponentInChildren<GlbRuntimeLoader>(true);
         if (groundRoot == null) groundRoot = transform;
-        if (dog != null) dog.Loaded += Init;
+        if (dog != null)
+        {
+            dog.Loaded += Init;
+            dog.SizeChanged += OnDogSizeChanged;
+        }
         else Debug.LogError("[GroundShadow] GlbRuntimeLoader를 찾지 못했습니다");
     }
 
@@ -90,7 +94,11 @@ public class DogGroundShadow : MonoBehaviour
 
     void OnDestroy()
     {
-        if (dog != null) dog.Loaded -= Init;
+        if (dog != null)
+        {
+            dog.Loaded -= Init;
+            dog.SizeChanged -= OnDogSizeChanged;
+        }
         if (material != null) Destroy(material);
         if (quadMesh != null) Destroy(quadMesh);
     }
@@ -127,17 +135,34 @@ public class DogGroundShadow : MonoBehaviour
 
     void CreateBodyBlobs()
     {
-        // 모델 바운즈(강아지 로컬)를 groundRoot 로컬 좌표로 옮겨서 앞뒤/좌우 크기를 구함
+        RefreshBodyBounds();
+        Debug.Log($"[GroundShadow] 몸 그림자 기준: {bodySize.x * 100f:0.0} x {bodySize.z * 100f:0.0}cm, 높이 {dogHeight * 100f:0.0}cm");
+        // 넓고 옅은 그림자 위에 좁고 진한 그림자를 겹쳐서 가운데로 갈수록 진해지게 함
+        ambientBlob = CreateBlob("BodyAmbient");
+        coreBlob = CreateBlob("BodyCore");
+    }
+
+    // 모델 바운즈(강아지 로컬)를 groundRoot 로컬 좌표로 옮겨서 앞뒤/좌우 크기를 구함.
+    // 강아지 스케일이 바뀌면 이 변환 결과가 달라지므로 크기가 바뀔 때마다 다시 계산
+    void RefreshBodyBounds()
+    {
         var local = dog.LocalBounds;
         var dogT = dog.transform;
         bodyCenter = groundRoot.InverseTransformPoint(dogT.TransformPoint(local.center));
         var size = groundRoot.InverseTransformVector(dogT.TransformVector(local.size));
         bodySize = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), Mathf.Abs(size.z));
         dogHeight = bodySize.y;
+    }
 
-        // 넓고 옅은 그림자 위에 좁고 진한 그림자를 겹쳐서 가운데로 갈수록 진해지게 함
-        ambientBlob = CreateBlob("BodyAmbient");
-        coreBlob = CreateBlob("BodyCore");
+    // 강아지 키가 바뀌면 몸 그림자 크기/위치와 발 블롭 크기(dogHeight 비례)를 새 크기에 맞춤
+    void OnDogSizeChanged()
+    {
+        if (!initialized) return; // 로드 중 첫 크기 적용은 Init에서 반영됨
+        RefreshBodyBounds();
+        // 발이 닿은 높이 기록은 이전 크기 기준이므로 다시 잼
+        foreach (var foot in feet) foot.groundedHeight = float.MaxValue;
+        ApplySettings();
+        Debug.Log($"[GroundShadow] 크기 변경 반영: 몸 {bodySize.x * 100f:0.0} x {bodySize.z * 100f:0.0}cm, 높이 {dogHeight * 100f:0.0}cm");
     }
 
     void CreateFootBlobs()

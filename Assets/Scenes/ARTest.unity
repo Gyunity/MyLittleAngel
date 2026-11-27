@@ -250,6 +250,7 @@ MonoBehaviour:
   arriveDistance: 0.02
   slowDownDistance: 0.15
   minSpeedFactor: 0.3
+  logTaps: 0
   planeFillColor: {r: 0.72, g: 0.88, b: 0.93, a: 0.18}
   planeLineColor: {r: 1, g: 1, b: 1, a: 0.35}
 --- !u!4 &743529920
@@ -735,6 +736,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GlbRuntimeLoader
   fileName: dog_quad15k_transfer.glb
   targetHeight: 0.5
+  shoulderHeightCm: 0
+  defaultShoulderHeightCm: 0
   normalStrength: 0.3
   walkClipName: 
   idleClipName: 
@@ -744,6 +747,14 @@ MonoBehaviour:
   idleHeadYawAngle: 8
   idleHeadPitchAngle: 3
   idleTailWagAngle: 6
+  logMeasurement: 0
+  shoulderBoneName: 
+  shoulderSliceRatio: 0.025
+  shoulderPercentile: 0.98
+  shoulderExcludeBones: head,tail
+  shoulderExcludeMaxWeight: 0.5
+  shoulderNeckSlope: 1
+  showShoulderMarker: 1
 --- !u!1 &1887360194
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,9 +805,13 @@ MonoBehaviour:
   blobShader: {fileID: 4800000, guid: a8ede7895af0c214b8c6413c00ba673b, type: 3}
   shadowColor: {r: 0, g: 0, b: 0, a: 1}
   heightAboveGround: 0.001
-  bodyOpacity: 0.35
-  bodyHardness: 0.1
-  bodySizeScale: {x: 1.1, y: 0.9}
+  ambientOpacity: 0.35
+  ambientHardness: 0
+  ambientSizeScale: {x: 1.4, y: 1.15}
+  coreOpacity: 0.45
+  coreHardness: 0.3
+  coreSizeScale: {x: 0.8, y: 0.7}
+  useFootBlobs: 0
   footBoneNames: []
   footOpacity: 0.55
   footHardness: 0.25
@@ -804,6 +819,7 @@ MonoBehaviour:
   footTipScale: 1
   footFadeHeightRatio: 0.06
   footLiftedScale: 1.5
+  showTuningPanel: 0
   logBones: 0
 --- !u!1 &1988816977
 GameObject:
